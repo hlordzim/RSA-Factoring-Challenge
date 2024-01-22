@@ -1,9 +1,34 @@
-#!/bin/bash
+#!/usr/bin/python3
+import sys
 
-FILE=$1
+def factorize(number):
+    for i in range(2, number // 2 + 1):
+        if number % i == 0:
+            print(f"{number}={i}*{number // i}")
+            return
 
-while read NUMBERS;
-do
-    factors=($(factor "$NUMBERS"))
-    echo "$NUMBERS=$(($NUMBERS/${factors[1]}))*${factors[2]}"
-done < "$FILE"
+    print(f"{number}=1*{number}")
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python factors.py <file>")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                number = int(line.strip())
+                if number > 1:
+                    factorize(number)
+
+    except FileNotFoundError:
+        print(f"Error: File not found - {file_path}")
+        sys.exit(1)
+    except ValueError:
+        print(f"Error: Invalid data in file - {file_path}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
